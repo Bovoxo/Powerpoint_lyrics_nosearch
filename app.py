@@ -29,6 +29,7 @@ def create_pptx_from_lyrics(lines):
             p = tf.add_paragraph()
             p.text = line
             p.font.size = Pt(32)
+            p.alignment = PP_ALIGN.CENTER
     pptx_io = io.BytesIO()
     prs.save(pptx_io)
     pptx_io.seek(0)
