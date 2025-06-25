@@ -1,6 +1,7 @@
 import streamlit as st
 from pptx import Presentation
 from pptx.util import Inches, Pt
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
 import io
 import re
 
@@ -12,15 +13,22 @@ def clean_lyrics(text):
 
 def create_pptx_from_lyrics(lines):
     prs = Presentation()
-    blank_slide_layout = prs.slide_layouts[5]
+    prs.slide_width = Inches(13.33)
+    prs.slide_height = Inches(7.5)
+    blank_slide_layout = prs.slide_layouts[6]
     for i in range(0, len(lines), 4):
         slide = prs.slides.add_slide(blank_slide_layout)
-        text_box = slide.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(5))
+        box_width = Inches(10)
+        box_height = Inches(6)
+        box_left = (prs.slide_width - box_width) / 2
+        box_top = Inches(0.75)
+        text_box = slide.shapes.add_textbox(box_left, box_top, box_width, box_height)
         tf = text_box.text_frame
+        tf.vertical_anchor = MSO_ANCHOR.TOP
         for line in lines[i:i+4]:
             p = tf.add_paragraph()
             p.text = line
-            p.font.size = Pt(28)
+            p.font.size = Pt(32)
     pptx_io = io.BytesIO()
     prs.save(pptx_io)
     pptx_io.seek(0)
